@@ -1,0 +1,19 @@
+{
+  "name": "moralis-backend",
+  "description": "Moralis cloud function for LimiSwap",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "concurrently --kill-others \"yarn build\" \"yarn sync\"",
+    "build": "npx tsc -w",
+    "sync": "moralis-admin-cli watch-cloud-folder --moralisApiKey $(grep MORALIS_API_KEY  .env | cut -d '=' -f2) --moralisApiSecret $(grep MORALIS_API_SECRET  .env | cut -d '=' -f2)  --moralisSubdomain $(grep MORALIS_SUBDOMAIN  .env | cut -d '=' -f2) --autoSave 1 --moralisCloudfolder ./dist"
+  },
+  "author": "REGO350",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^6.4.0",
+    "moralis": "^0.0.135",
+    "moralis-admin-cli": "^2.1.15",
+    "typescript": "^4.5.2"
+  }
+}
