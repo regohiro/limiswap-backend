@@ -1,5 +1,21 @@
+//@ts-ignore
+Moralis.Cloud.beforeConsume("OrderCreated", (event) => {
+  return true;
+});
+
+//@ts-ignore
+Moralis.Cloud.beforeConsume("OrderFilled", (event) => {
+  return true;
+});
+
+//@ts-ignore
+Moralis.Cloud.beforeConsume("OrderCancelled", (event) => {
+  return true;
+});
+
 Moralis.Cloud.beforeSave("OrderCreated", async (request) => {
-  const orders = Moralis.Object.extend("Orders");
+  const Orders = Moralis.Object.extend("Orders");
+  const orders = new Orders();
   await orders.save({
     orderId: request.object.get("orderId"),
     targetPrice: request.object.get("targetPrice"),
