@@ -62,6 +62,7 @@ Moralis.Cloud.define("getOrders", async (request) => {
   const query = new Moralis.Query("Orders");
   const user = request.params.userAddr.toLowerCase()
   query.equalTo("user", user);
+  query.addDescending("orderId");
   const orders = await query.find();
   return orders;
 });
