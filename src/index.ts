@@ -12,16 +12,22 @@ Moralis.Cloud.beforeConsume("OrderCancelled", (event) => {
   return true;
 });
 
-Moralis.Cloud.afterSave("OrderCreated", async ({object}) => {
+Moralis.Cloud.afterSave("OrderCreated", async ({ object }) => {
   const query = new Moralis.Query("Orders");
   query.equalTo("orderId", object.get("orderId"));
-  if(!await query.first()){
+  if (!(await query.first())) {
     const Orders = Moralis.Object.extend("Orders");
     const orders = new Orders();
 
     const web3 = Moralis.web3ByChain("0x2a");
-    const tokenIn = new web3.eth.Contract(Moralis.Web3.abis.erc20, object.get("tokenIn"));
-    const tokenOut = new web3.eth.Contract(Moralis.Web3.abis.erc20, object.get("tokenOut"));
+    const tokenIn = new web3.eth.Contract(
+      Moralis.Web3.abis.erc20,
+      object.get("tokenIn")
+    );
+    const tokenOut = new web3.eth.Contract(
+      Moralis.Web3.abis.erc20,
+      object.get("tokenOut")
+    );
 
     let tokenInSymbol: string;
     let tokenOutSymbol: string;
@@ -45,7 +51,7 @@ Moralis.Cloud.afterSave("OrderCreated", async ({object}) => {
       user: object.get("user"),
       poolFee: object.get("poolFee"),
       slippage: object.get("slippage"),
-      status: "PENDING"
+      status: "PENDING",
     });
   }
   await object.destroy();
@@ -56,7 +62,7 @@ Moralis.Cloud.afterSave("OrderFilled", async ({ object }) => {
   query.equalTo("orderId", object.get("orderId"));
 
   const order = await query.first();
-  if(order){
+  if (order) {
     order.set("status", "FILLED");
     await order.save();
   }
@@ -68,7 +74,7 @@ Moralis.Cloud.afterSave("OrderCancelled", async ({ object }) => {
   query.equalTo("orderId", object.get("orderId"));
 
   const order = await query.first();
-  if(order){
+  if (order) {
     order.set("status", "CANCELLED");
     await order.save();
   }
@@ -77,7 +83,7 @@ Moralis.Cloud.afterSave("OrderCancelled", async ({ object }) => {
 
 Moralis.Cloud.define("getOrders", async ({ params }) => {
   const query = new Moralis.Query("Orders");
-  const user = params.userAddr.toLowerCase()
+  const user = params.userAddr.toLowerCase();
   query.equalTo("user", user);
   query.addDescending("orderId");
   const orders = await query.find();
