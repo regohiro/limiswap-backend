@@ -31,13 +31,19 @@ Moralis.Cloud.afterSave("OrderCreated", async ({ object }) => {
 
     let tokenInSymbol: string;
     let tokenOutSymbol: string;
+    let tokenInDecimals: string;
+    let tokenOutDecimals: string;
 
     try {
       tokenInSymbol = await tokenIn.methods.symbol().call();
+      tokenInDecimals = await tokenIn.methods.decimals().call();
       tokenOutSymbol = await tokenOut.methods.symbol().call();
+      tokenOutDecimals = await tokenOut.methods.decimals().call();
     } catch {
       tokenInSymbol = "";
       tokenOutSymbol = "";
+      tokenInDecimals = null;
+      tokenOutDecimals = null;
     }
 
     await orders.save({
@@ -46,8 +52,10 @@ Moralis.Cloud.afterSave("OrderCreated", async ({ object }) => {
       amountIn: object.get("amountIn"),
       tokenIn: object.get("tokenIn"),
       tokenInSymbol,
+      tokenInDecimals: tokenInDecimals,
       tokenOut: object.get("tokenOut"),
       tokenOutSymbol,
+      tokenOutDecimals: tokenOutDecimals,
       user: object.get("user"),
       poolFee: object.get("poolFee"),
       slippage: object.get("slippage"),
