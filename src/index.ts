@@ -14,7 +14,7 @@ Moralis.Cloud.beforeConsume("OrderCancelled", (event) => {
 
 Moralis.Cloud.afterSave("OrderCreated", async ({ object }) => {
   const query = new Moralis.Query("Orders");
-  query.equalTo("orderId", object.get("orderId"));
+  query.equalTo("orderId", Number(object.get("orderId")));
   if (!(await query.first())) {
     const Orders = Moralis.Object.extend("Orders");
     const orders = new Orders();
@@ -47,7 +47,7 @@ Moralis.Cloud.afterSave("OrderCreated", async ({ object }) => {
     }
 
     await orders.save({
-      orderId: object.get("orderId"),
+      orderId: Number(object.get("orderId")),
       targetPrice: object.get("targetPrice"),
       amountIn: object.get("amountIn"),
       tokenIn: object.get("tokenIn"),
@@ -67,7 +67,7 @@ Moralis.Cloud.afterSave("OrderCreated", async ({ object }) => {
 
 Moralis.Cloud.afterSave("OrderFilled", async ({ object }) => {
   const query = new Moralis.Query("Orders");
-  query.equalTo("orderId", object.get("orderId"));
+  query.equalTo("orderId", Number(object.get("orderId")));
 
   const order = await query.first();
   if (order) {
@@ -79,7 +79,7 @@ Moralis.Cloud.afterSave("OrderFilled", async ({ object }) => {
 
 Moralis.Cloud.afterSave("OrderCancelled", async ({ object }) => {
   const query = new Moralis.Query("Orders");
-  query.equalTo("orderId", object.get("orderId"));
+  query.equalTo("orderId", Number(object.get("orderId")));
 
   const order = await query.first();
   if (order) {
